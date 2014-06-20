@@ -1,0 +1,5 @@
+devToken=
+noteStore=
+eventNotebook=
+eventFile=events.ical
+eventDatePattern=.*(?<day>\\d\\d)\\.(?<month>\\d\\d)\\.(?<year>\\d\\d\\d\\d)(?: (?<fromHour>\\d?\\d):(?<fromMinute>\\d\\d)(?:-(?<toHour>\\d?\\d):(?<toMinute>\\d\\d))?)?.*
