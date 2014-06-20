@@ -1,6 +1,7 @@
 package org.tario.enki.conf;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -31,5 +32,9 @@ public class Configuration {
 
 	public File getEventFile() {
 		return new File(env.getProperty("eventFile"));
+	}
+
+	public Pattern getEventDatePattern() {
+		return Pattern.compile(env.getProperty("eventDatePattern"));
 	}
 }
