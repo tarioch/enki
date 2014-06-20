@@ -3,4 +3,5 @@ pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.next
 release.properties
-/enki.properties
+enki.properties
+*.ical
