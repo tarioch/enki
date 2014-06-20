@@ -1,5 +1,7 @@
 package org.tario.enki.conf;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -25,5 +27,9 @@ public class Configuration {
 
 	public String getEventNotebook() {
 		return env.getProperty("eventNotebook");
+	}
+
+	public File getEventFile() {
+		return new File(env.getProperty("eventFile"));
 	}
 }

@@ -1,10 +1,15 @@
 package org.tario.enki;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tario.enki.conf.Configuration;
+
+import biweekly.Biweekly;
+import biweekly.ICalendar;
+import biweekly.component.VEvent;
 
 import com.evernote.auth.EvernoteAuth;
 import com.evernote.auth.EvernoteService;
@@ -27,11 +32,14 @@ public class Enki {
 
 	public void run() throws Exception {
 		final EvernoteAuth evernoteAuth = new EvernoteAuth(EvernoteService.PRODUCTION, conf.getDevToken());
-		// evernoteAuth.setNoteStoreUrl(conf.getNoteStore());
+		evernoteAuth.setNoteStoreUrl(conf.getNoteStore());
 		final ClientFactory clientFactory = new ClientFactory(evernoteAuth);
 
 		final NoteStoreClient noteStoreClient;
 		noteStoreClient = clientFactory.createNoteStoreClient();
+
+		final ICalendar ical = new ICalendar();
+		ical.setProductId("org.tario.enki");
 
 		final List<Notebook> notebooks = noteStoreClient.listNotebooks();
 		for (final Notebook notebook : notebooks) {
@@ -40,10 +48,19 @@ public class Enki {
 				filter.setNotebookGuid(notebook.getGuid());
 				final NoteList notes = noteStoreClient.findNotes(filter, 0, 9000);
 				for (final Note note : notes.getNotes()) {
-					System.out.println(note.getTitle());
+					final VEvent event = new VEvent();
+					final String title = note.getTitle();
+
+					final Date startDate = new Date();
+
+					event.setSummary(title);
+					event.setDateStart(startDate);
+
+					ical.addEvent(event);
 				}
 			}
 		}
 
+		Biweekly.write(ical).go(conf.getEventFile());
 	}
 }
