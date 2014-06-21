@@ -37,4 +37,8 @@ public class Configuration {
 	public Pattern getEventDatePattern() {
 		return Pattern.compile(env.getProperty("eventDatePattern"));
 	}
+
+	public String getEventTimeZone() {
+		return env.getProperty("eventTimeZone");
+	}
 }

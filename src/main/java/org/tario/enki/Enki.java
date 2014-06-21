@@ -13,6 +13,8 @@ import org.tario.enki.conf.Configuration;
 import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
+import biweekly.property.DateEnd;
+import biweekly.property.DateStart;
 import biweekly.util.Duration;
 
 import com.evernote.auth.EvernoteAuth;
@@ -68,17 +70,25 @@ public class Enki {
 
 						final LocalDate fromDate = new LocalDate(Integer.parseInt(year), Integer.parseInt(month),
 								Integer.parseInt(day));
-						if (fromHour != null && fromMinute != null && toHour != null && toMinute != null) {
+						if (fromHour != null && fromMinute != null) {
 							final LocalTime fromTime = new LocalTime(Integer.parseInt(fromHour),
 									Integer.parseInt(fromMinute));
 
-							final LocalTime toTime = new LocalTime(Integer.parseInt(toHour),
-									Integer.parseInt(toMinute));
+							final DateStart dateStart = new DateStart(fromDate.toLocalDateTime(fromTime).toDate());
+							dateStart.setTimezoneId(conf.getEventTimeZone());
+							event.setDateStart(dateStart);
 
-							event.setDateStart(fromDate.toLocalDateTime(fromTime).toDate());
-							event.setDateEnd(fromDate.toLocalDateTime(toTime).toDate());
+							if (toHour != null && toMinute != null) {
+								final LocalTime toTime = new LocalTime(Integer.parseInt(toHour),
+										Integer.parseInt(toMinute));
+								final DateEnd dateEnd = new DateEnd(fromDate.toLocalDateTime(toTime).toDate());
+								dateEnd.setTimezoneId(conf.getEventTimeZone());
+								event.setDateEnd(dateEnd);
+							} else {
+								event.setDuration(Duration.builder().hours(1).build());
+							}
 						} else {
-							event.setDateStart(fromDate.toDate());
+							event.setDateStart(new DateStart(fromDate.toDate(), false));
 							event.setDuration(Duration.builder().days(1).build());
 						}
 
